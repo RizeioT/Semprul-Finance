@@ -1,0 +1,6 @@
+{
+  "name": "SempruLTech",
+  "description": "Interactive Neo-Brutalist Digital Agency with project pricing calculator and AI consulting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

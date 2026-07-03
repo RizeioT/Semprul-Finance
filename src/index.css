@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer utilities {
+  .neo-shadow {
+    box-shadow: 4px 4px 0px #000000;
+  }
+  .neo-shadow-lg {
+    box-shadow: 8px 8px 0px #000000;
+  }
+  .neo-shadow-sm {
+    box-shadow: 2px 2px 0px #000000;
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# Pemblokiran env yang lebih spesifik dan aman
+.env
+.env.local
+.env.*.local
+
+# Tetap izinkan file contoh
+!.env.example
