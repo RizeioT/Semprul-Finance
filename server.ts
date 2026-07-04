@@ -87,62 +87,6 @@ async function startServer() {
       ? createClient(supabaseUrl, supabaseServiceKey)
       : null;
 
-  const bootstrapSQL = `-- COPY AND RUN THIS SCRIPT IN YOUR SUPABASE SQL EDITOR:
-
--- 1. Create Users Table
-CREATE TABLE IF NOT EXISTS semprul_users (
-  username TEXT PRIMARY KEY,
-  full_name TEXT NOT NULL,
-  password_hash TEXT NOT NULL,
-  avatar TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- 2. Create Transactions Table
-CREATE TABLE IF NOT EXISTS semprul_transactions (
-  id TEXT PRIMARY KEY,
-  username TEXT REFERENCES semprul_users(username) ON DELETE CASCADE,
-  date TEXT NOT NULL,
-  description TEXT NOT NULL,
-  category TEXT NOT NULL,
-  type TEXT NOT NULL,
-  amount NUMERIC NOT NULL,
-  is_recurring BOOLEAN DEFAULT FALSE,
-  recurring_interval TEXT
-);
-
--- 3. Create Budgets Table
-CREATE TABLE IF NOT EXISTS semprul_budgets (
-  username TEXT REFERENCES semprul_users(username) ON DELETE CASCADE,
-  category TEXT NOT NULL,
-  allocated NUMERIC NOT NULL,
-  spent NUMERIC NOT NULL,
-  icon TEXT,
-  PRIMARY KEY (username, category)
-);
-
--- 4. Create Deleted Transactions Table
-CREATE TABLE IF NOT EXISTS semprul_deleted_history (
-  id TEXT PRIMARY KEY,
-  username TEXT REFERENCES semprul_users(username) ON DELETE CASCADE,
-  date TEXT NOT NULL,
-  description TEXT NOT NULL,
-  category TEXT NOT NULL,
-  type TEXT NOT NULL,
-  amount NUMERIC NOT NULL,
-  is_recurring BOOLEAN DEFAULT FALSE,
-  recurring_interval TEXT,
-  deleted_at TEXT NOT NULL
-);
-
--- 5. Enable Row-Level Security (RLS). Server uses the Service Role key,
--- which bypasses RLS entirely, so no policies are needed here.
--- This blocks any request made with the public anon key.
-ALTER TABLE semprul_users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE semprul_transactions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE semprul_budgets ENABLE ROW LEVEL SECURITY;
-ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
-
   // Helper mappers
   function mapUserToCamel(u: any): any {
     if (!u) return null;
@@ -246,7 +190,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
         connected: false,
         tablesExist: false,
         error: "Supabase URL atau Key belum terkonfigurasi di server.",
-        bootstrapSQL,
       });
     }
 
@@ -277,7 +220,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
             connected: false,
             tablesExist: false,
             error: `Autentikasi Supabase gagal: ${errMsg}`,
-            bootstrapSQL,
           });
         }
 
@@ -294,7 +236,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
             connected: true,
             tablesExist: false,
             error: "Tabel basis data belum dibuat di personal Supabase Anda.",
-            bootstrapSQL,
           });
         }
 
@@ -303,7 +244,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
           connected: true,
           tablesExist: false,
           error: `Kesalahan database (${errCode}): ${errMsg}`,
-          bootstrapSQL,
         });
       }
 
@@ -312,7 +252,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
         tablesExist: true,
         message:
           "Supabase terhubung dengan sempurna dan seluruh tabel siap digunakan!",
-        bootstrapSQL,
       });
     } catch (err: any) {
       const errMsg = err?.message || String(err);
@@ -330,7 +269,6 @@ ALTER TABLE semprul_deleted_history ENABLE ROW LEVEL SECURITY;`;
         connected: !isNetworkError,
         tablesExist: false,
         error: `Gagal menghubungkan ke Supabase: ${errMsg}`,
-        bootstrapSQL,
       });
     }
   });
